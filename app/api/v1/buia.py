@@ -9,7 +9,7 @@ api = Redprint('buia')
 
 
 @api.route("", methods=['GET'])
-def onegeojson():
+def geojson_by_extent():
     result = {
         "code": 1,
         "data": None,

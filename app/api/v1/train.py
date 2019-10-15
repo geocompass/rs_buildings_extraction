@@ -1,6 +1,7 @@
 from app.libs.redprint import Redprint
 from flask import jsonify, request
-from robosat_pink import test_rain
+from robosat_pink import RSPtrain
+import buia
 
 api = Redprint('train')
 
@@ -22,5 +23,7 @@ def train():
         result["code"] = 0
         result["msg"] = "参数有误"
         return jsonify(result)
+    # 获取geojson数据
 
+    RSPtrain.main(extent)
     return extent
