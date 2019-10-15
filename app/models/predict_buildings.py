@@ -4,8 +4,6 @@ from sqlalchemy.orm import relationship
 from app.models.base import Base
 
 
-class BUIA(Base):
+class PredictBuildings(Base):
     gid = Column(Integer, primary_key=True)
-    CNAME = Column(String(48))
-    LEVEL = Column(String(16))
-    # geom = Column(Text)
+    geom = Column(Text)

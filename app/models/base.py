@@ -39,6 +39,12 @@ class Query(BaseQuery):
 
 db = SQLAlchemy(query_class=Query)
 
+# 通过SQL语句查询数据库
+
+
+def queryBySQL(sql):
+    return db.session.execute(sql)
+
 
 class Base(db.Model):
     __abstract__ = True

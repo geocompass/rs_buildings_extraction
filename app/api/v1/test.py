@@ -3,6 +3,10 @@ api = Redprint('test')
 
 
 @api.route('', methods=['GET'])
-# @auth.login_required
 def get_test():
     return "testttt"
+
+
+@api.route('/1', methods=['GET'])
+def get_tt():
+    return "ddddd"
