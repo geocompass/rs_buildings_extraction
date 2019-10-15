@@ -1,13 +1,12 @@
 from app.libs.redprint import Redprint
 from flask import jsonify, request
-from robosat_pink import RSPpredit
-import buia
+# from robosat_geoc import RSPpredit
 
-api = Redprint('train')
+api = Redprint('predict')
 
 
 @api.route('', methods=['GET'])
-def train():
+def predict():
     result = {
         "code": 1,
         "data": None,
@@ -25,6 +24,6 @@ def train():
         return jsonify(result)
     # 获取geojson数据
 
-    geojson = RSPpredit.main(extent)
-    result["data"] = geojson
+    # geojson = RSPpredit.main(extent)
+    # result["data"] = geojson
     return result
