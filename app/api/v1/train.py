@@ -1,6 +1,6 @@
 from app.libs.redprint import Redprint
 from flask import jsonify, request
-# from robosat_geoc import RSPtrain
+from robosat_geoc import RSPtrain
 
 api = Redprint('train')
 
@@ -24,5 +24,5 @@ def train():
         return jsonify(result)
     # 获取geojson数据
 
-    # RSPtrain.main(extent)
+    RSPtrain.main(extent)
     return extent

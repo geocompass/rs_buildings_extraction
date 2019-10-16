@@ -1,6 +1,6 @@
 from app.libs.redprint import Redprint
 from flask import jsonify, request
-# from robosat_geoc import RSPpredit
+from robosat_geoc import RSPpredict
 
 api = Redprint('predict')
 
@@ -24,6 +24,6 @@ def predict():
         return jsonify(result)
     # 获取geojson数据
 
-    # geojson = RSPpredit.main(extent)
-    # result["data"] = geojson
+    geojson = RSPpredict.main(extent)
+    result["data"] = geojson
     return result
