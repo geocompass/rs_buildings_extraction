@@ -36,10 +36,15 @@
     ],
     "rules": {
       "no-console": "off",
-      "no-debugger": "off"
+      "no-debugger": "off",
+      "no-undef": "off",
+      "no-implicit-globals": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"
+    },
+    "globals": {
+      "config": true
     }
   },
   "postcss": {

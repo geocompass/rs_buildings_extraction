@@ -39,6 +39,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import DrawRectangle from "mapbox-gl-draw-rectangle-mode";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
+import axios from "axios";
 
 export default {
   name: "HelloWorld",
@@ -92,6 +93,7 @@ export default {
     }
   },
   methods: {
+    //初始化地图
     initMap() {
       mapboxgl.accessToken =
         "pk.eyJ1Ijoid3VjYW5nZW8iLCJhIjoiY2oxNGQ1ZDdsMDA0djJxbzdzdGU4NWpqMiJ9.iaTLldYv7GNfxWhN42h__g";
@@ -146,27 +148,62 @@ export default {
       this.draw = draw;
       this.map = map;
     },
+    //训练按钮
     trainBtn() {
       this.clearBtn();
       this.feature = "train";
       this.draw.changeMode("draw_rectangle");
     },
+    //预测按钮
     predictBtn() {
       this.clearBtn();
       this.feature = "predict";
       this.draw.changeMode("draw_rectangle");
     },
+    //清空按钮
     clearBtn() {
       this.draw.deleteAll();
     },
-    train(feature) {
+    //开始训练
+    async train(feature) {
       let extent = this.getExtentStr(feature);
       this.msg = extent;
+      await axios({
+        method: "get",
+        url: CONFIG.HOST + "/v1/train",
+        params: {
+          extent: extent,
+          map: "tdt"
+        }
+      });
+      this.msg = "正在训练中，请再系统后台查看进度...";
     },
-    predict(feature) {
+    //开始预测
+    async predict(feature) {
       let extent = this.getExtentStr(feature);
       this.msg = extent;
+      this.msg = "正在预测中，请稍后...";
+      let response = await axios({
+        method: "get",
+        url: CONFIG.HOST + "/v1/predict",
+        // url: "http://localhost:8080/test.json",
+        params: {
+          extent: extent,
+          map: "tdt"
+        }
+      });
+      if (response.status != 200 || !response.data) {
+        this.msg = "预测失败！，status code:" + response.status;
+        return;
+      }
+      let result = response.data;
+      if (result.code === 0) {
+        this.msg = result.msg;
+        return;
+      }
+      this.draw.add(result.data);
     },
+    //将矩形的geojson提取extent为string类型
     getExtentStr(geojson) {
       if (
         !geojson ||
