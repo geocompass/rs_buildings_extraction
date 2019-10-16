@@ -8,7 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@mapbox/mapbox-gl-draw": "^1.1.2",
+    "@mapbox/mapbox-gl-language": "^0.10.1",
+    "axios": "^0.19.0",
     "core-js": "^3.1.2",
+    "mapbox-gl": "^1.4.1",
+    "mapbox-gl-draw-rectangle-mode": "^1.0.4",
     "vue": "^2.6.10"
   },
   "devDependencies": {
@@ -29,7 +34,10 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
+    "rules": {
+      "no-console": "off",
+      "no-debugger": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }
