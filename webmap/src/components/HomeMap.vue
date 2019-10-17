@@ -143,6 +143,46 @@ export default {
       //设置为全局变量
       this.draw = draw;
       this.map = map;
+      //地图事件
+      this.mapEvent(map);
+    },
+    async mapEvent(map) {
+      map.on("moveend", async function() {
+        let bounds = map.getBounds();
+        let extentArr = [
+          bounds._sw.lng,
+          bounds._sw.lat,
+          bounds._ne.lng,
+          bounds._ne.lat
+        ];
+        let extent = extentArr.join(",");
+        let result = await axios({
+          method: "get",
+          url: CONFIG.SERVER + "/v1/geojson",
+          params: {
+            extent: extent
+          }
+        });
+        map.addSource("tempbuild", {
+          /* addSource()函数添加资源,资源ID是route */
+          type: "geojson",
+          data: result.data
+        });
+        map.addLayer({
+          /* 为地图添加layer */
+          id: "tempbuild" /* layer id是route */,
+          type: "polygon" /* line类型layer*/,
+          source: "tempbuild" /* 资源引用的是上面定义的source*/,
+          layout: {
+            "line-join": "round" /* 线条相交的形状 */,
+            "line-cap": "round" /* 线条末端形状 */
+          },
+          paint: {
+            "line-color": "#888" /* 线条颜色 */,
+            "line-width": 8 /* 线条宽度 */
+          }
+        });
+      });
     },
     //训练按钮
     trainBtn() {
