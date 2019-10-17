@@ -1,3 +1,4 @@
+from flask_cors import CORS
 from .app import Flask
 
 
@@ -16,6 +17,7 @@ def register_plugin(app):
 def create_app():
     app = Flask(__name__, static_folder='../webmap/dist',
                 static_url_path='')
+    CORS(app, supports_credentials=True)
     app.config.from_object('app.config.setting')
     app.config.from_object('app.config.secure')
 
