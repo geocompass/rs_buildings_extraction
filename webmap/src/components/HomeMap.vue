@@ -97,13 +97,9 @@ export default {
     initMap() {
       mapboxgl.accessToken =
         "pk.eyJ1Ijoid3VjYW5nZW8iLCJhIjoiY2oxNGQ1ZDdsMDA0djJxbzdzdGU4NWpqMiJ9.iaTLldYv7GNfxWhN42h__g";
-      // 英文标注转换为中文
-      mapboxgl.setRTLTextPlugin(
-        "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js"
-      );
       const map = new mapboxgl.Map({
         container: this.$refs.basicMapbox,
-        style: "mapbox://styles/mapbox/streets-v9",
+        style: CONFIG.HOST + "/style.json",
         center: [116.295, 39.945],
         zoom: 16
       });
@@ -216,9 +212,25 @@ export default {
         return;
       }
       let coordinates = geojson.geometry.coordinates[0];
-      let startPoint = coordinates[0];
-      let endPoint = coordinates[3];
-      let extentStr = startPoint.concat(endPoint).join(",");
+      let minx = 180,
+        miny = 180;
+      let maxx = -180,
+        maxy = -180;
+      coordinates.forEach(coord => {
+        if (coord[0] > maxx) {
+          maxx = coord[0];
+        }
+        if (coord[0] < minx) {
+          minx = coord[0];
+        }
+        if (coord[1] > maxy) {
+          maxy = coord[1];
+        }
+        if (coord[1] < miny) {
+          miny = coord[1];
+        }
+      });
+      let extentStr = [minx, miny, maxx, maxy].join(",");
       return extentStr;
     }
   },
