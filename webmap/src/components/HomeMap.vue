@@ -97,13 +97,9 @@ export default {
     initMap() {
       mapboxgl.accessToken =
         "pk.eyJ1Ijoid3VjYW5nZW8iLCJhIjoiY2oxNGQ1ZDdsMDA0djJxbzdzdGU4NWpqMiJ9.iaTLldYv7GNfxWhN42h__g";
-      // 英文标注转换为中文
-      mapboxgl.setRTLTextPlugin(
-        "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js"
-      );
       const map = new mapboxgl.Map({
         container: this.$refs.basicMapbox,
-        style: "mapbox://styles/mapbox/streets-v9",
+        style: CONFIG.HOST + "/style.json",
         center: [116.295, 39.945],
         zoom: 16
       });
