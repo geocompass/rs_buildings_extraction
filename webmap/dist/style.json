@@ -1,0 +1,21 @@
+{
+    "version": 8,
+    "sources": {
+        "raster-tiles": {
+            "type": "raster",
+            "tiles": [
+                "http://t0.tianditu.gov.cn/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=fb1bfb9e06cd7681813a42f4c934e1ea"
+            ],
+            "tileSize": 256
+        }
+    },
+    "layers": [
+        {
+            "id": "tdt-img-tiles",
+            "type": "raster",
+            "source": "raster-tiles",
+            "minzoom": 0,
+            "maxzoom": 22
+        }
+    ]
+}
