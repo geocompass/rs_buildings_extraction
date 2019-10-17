@@ -1,6 +1,10 @@
 <template>
   <div style="height:100%;width:100%;">
     <div ref="basicMapbox" :style="mapSize"></div>
+    <div class="buildIcon">
+      <input type="checkbox" id="checkbox" v-model="isShowBUIA" />
+      <label>天地图建筑物</label>
+    </div>
     <div class="mapboxgl-ctrl-group mapboxgl-ctrl xunlianIcon">
       <button
         class="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_polygon"
@@ -56,7 +60,8 @@ export default {
       draw: null,
       map: null,
       feature: null,
-      msg: "请选择左侧相应的工具执行训练或预测！"
+      msg: "请选择左侧相应的工具执行训练或预测！",
+      isShowBUIA: true
     };
   },
   computed: {
@@ -89,6 +94,20 @@ export default {
         this.train(rectangle);
       } else if (oldFeature === "predict") {
         this.predict(rectangle);
+      }
+    },
+    isShowBUIA: function(newValue) {
+      if (newValue) {
+        this.addBUIA();
+      } else {
+        let geojsonData = {
+          type: "FeatureCollection",
+          features: []
+        };
+        let source = this.map.getSource("tempbuild");
+        if (source) {
+          source.setData(geojsonData);
+        }
       }
     }
   },
@@ -144,45 +163,47 @@ export default {
       this.draw = draw;
       this.map = map;
       //地图事件
-      this.mapEvent(map);
+      var that = this;
+      this.map.on("moveend", async function() {
+        that.addBUIA();
+      });
+      this.addBUIA();
     },
-    async mapEvent(map) {
-      map.on("moveend", async function() {
-        let bounds = map.getBounds();
-        let extentArr = [
-          bounds._sw.lng,
-          bounds._sw.lat,
-          bounds._ne.lng,
-          bounds._ne.lat
-        ];
-        let extent = extentArr.join(",");
-        let result = await axios({
-          method: "get",
-          url: CONFIG.SERVER + "/v1/geojson",
-          params: {
-            extent: extent
-          }
-        });
-        map.addSource("tempbuild", {
+    async addBUIA() {
+      let bounds = this.map.getBounds();
+      let extentArr = [
+        bounds._sw.lng,
+        bounds._sw.lat,
+        bounds._ne.lng,
+        bounds._ne.lat
+      ];
+      let extent = extentArr.join(",");
+      let result = await axios({
+        method: "get",
+        url: CONFIG.SERVER + "/v1/geojson",
+        params: {
+          extent: extent
+        }
+      });
+      let geojsonData = result.data;
+      if (!result.data || !this.isShowBUIA) {
+        geojsonData = {
+          type: "FeatureCollection",
+          features: []
+        };
+      }
+      let source = this.map.getSource("tempbuild");
+      if (source) {
+        source.setData(geojsonData);
+      } else {
+        //添加geojson图层
+        this.map.addSource("tempbuild", {
           /* addSource()函数添加资源,资源ID是route */
           type: "geojson",
-          data: result.data
+          data: geojsonData
         });
-        map.addLayer({
-          /* 为地图添加layer */
-          id: "tempbuild" /* layer id是route */,
-          type: "polygon" /* line类型layer*/,
-          source: "tempbuild" /* 资源引用的是上面定义的source*/,
-          layout: {
-            "line-join": "round" /* 线条相交的形状 */,
-            "line-cap": "round" /* 线条末端形状 */
-          },
-          paint: {
-            "line-color": "#888" /* 线条颜色 */,
-            "line-width": 8 /* 线条宽度 */
-          }
-        });
-      });
+        this.map.addLayer(CONFIG.BUILDING_STYLE);
+      }
     },
     //训练按钮
     trainBtn() {
@@ -327,5 +348,16 @@ export default {
   left: 650px;
   max-width: 500px;
   text-align: left;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 3px;
+}
+.buildIcon {
+  position: absolute;
+  top: 23px;
+  left: 250px;
+}
+.buildIcon label {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 3px;
 }
 </style>
