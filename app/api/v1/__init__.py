@@ -1,6 +1,6 @@
 
 from flask import Blueprint
-from app.api.v1 import test, predict_buildings, buia, train, predict, wmts
+from app.api.v1 import test, predict_buildings, buia, train, predict, wmts, geojson
 
 
 def create_blueprint_v1():
@@ -12,5 +12,6 @@ def create_blueprint_v1():
     test.api.register(bp_v1)
     train.api.register(bp_v1)
     wmts.api.register(bp_v1)
+    geojson.api.register(bp_v1)
 
     return bp_v1
