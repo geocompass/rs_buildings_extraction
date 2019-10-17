@@ -25,5 +25,14 @@ def predict():
     # 获取geojson数据
 
     geojson = RSPpredict.main(extent)
+
+    if not geojson:
+        result["code"] = 0
+        result["msg"] = "预测失败"
+        return jsonify(result)
+    # 给geojson添加properties
+    for feature in geojson["features"]:
+        feature["properties"] = {}
+
     result["data"] = geojson
     return result
