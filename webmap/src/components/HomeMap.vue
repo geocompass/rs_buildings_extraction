@@ -216,9 +216,25 @@ export default {
         return;
       }
       let coordinates = geojson.geometry.coordinates[0];
-      let startPoint = coordinates[0];
-      let endPoint = coordinates[3];
-      let extentStr = startPoint.concat(endPoint).join(",");
+      let minx = 180,
+        miny = 180;
+      let maxx = -180,
+        maxy = -180;
+      coordinates.forEach(coord => {
+        if (coord[0] > maxx) {
+          maxx = coord[0];
+        }
+        if (coord[0] < minx) {
+          minx = coord[0];
+        }
+        if (coord[1] > maxy) {
+          maxy = coord[1];
+        }
+        if (coord[1] < miny) {
+          miny = coord[1];
+        }
+      });
+      let extentStr = [minx, miny, maxx, maxy].join(",");
       return extentStr;
     }
   },
