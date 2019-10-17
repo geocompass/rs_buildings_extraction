@@ -100,9 +100,12 @@ venv.bak/
 # mkdocs documentation
 /site
 
+.DS_Store
+
 # mypy
 .mypy_cache/
 
 .vscode/settings.json
 robosat.pink
 ds
+robosat_geoc
