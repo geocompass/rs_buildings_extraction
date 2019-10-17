@@ -14,7 +14,8 @@ def register_plugin(app):
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='../webmap/dist',
+                static_url_path='')
     app.config.from_object('app.config.setting')
     app.config.from_object('app.config.secure')
 
