@@ -1,6 +1,15 @@
 <template>
   <div style="height:100%;width:100%;">
     <div ref="basicMapbox" :style="mapSize"></div>
+    <div class="mapboxgl-ctrl-group mapboxgl-ctrl tdtIcon">
+      <button
+        class="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_uncombine"
+        title="点击切换底图"
+        v-on:click="changeRSMap"
+      >
+        {{ rsMap }}
+      </button>
+    </div>
     <div class="buildIcon">
       <input type="checkbox" id="checkbox" v-model="isShowBUIA" />
       <label>天地图建筑物</label>
@@ -61,7 +70,8 @@ export default {
       map: null,
       feature: null,
       msg: "请选择左侧相应的工具执行训练或预测！",
-      isShowBUIA: true
+      isShowBUIA: true,
+      rsMap: "天地图"
     };
   },
   computed: {
@@ -221,6 +231,19 @@ export default {
     clearBtn() {
       this.draw.deleteAll();
     },
+    changeRSMap() {
+      if (this.rsMap === "天地图") {
+        let style = this.map.getStyle();
+        style.sources["raster-tiles"] = CONFIG.GOOGLE_TILE;
+        this.map.setStyle(style);
+        this.rsMap = "谷歌";
+      } else if (this.rsMap === "谷歌") {
+        let style = this.map.getStyle();
+        style.sources["raster-tiles"] = CONFIG.TDT_TILE;
+        this.map.setStyle(style);
+        this.rsMap = "天地图";
+      }
+    },
     //开始训练
     async train(feature) {
       let extent = this.getExtentStr(feature);
@@ -359,5 +382,16 @@ export default {
 .buildIcon label {
   background-color: rgba(255, 255, 255, 0.7);
   padding: 3px;
+}
+.tdtIcon {
+  position: absolute;
+  top: 20px;
+  left: 150px;
+}
+.tdtIcon button {
+  background-position: left;
+  width: 75px;
+  text-align: right;
+  padding: 4px;
 }
 </style>
