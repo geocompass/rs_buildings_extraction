@@ -42,6 +42,17 @@
       </button>
     </div>
     <div class="msg">{{ msg }}</div>
+    <div class="mapboxgl-ctrl-group mapboxgl-ctrl logIcon">
+      <!-- <a target="_blank" src> -->
+      <button
+        class="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_uncombine"
+        title="日志"
+        v-on:click="checkLogBtn"
+      >
+        日志
+      </button>
+      <!-- </a> -->
+    </div>
   </div>
 </template>
 
@@ -231,6 +242,7 @@ export default {
     clearBtn() {
       this.draw.deleteAll();
     },
+    //切换遥感影像底图
     changeRSMap() {
       if (this.rsMap === "天地图") {
         let style = this.map.getStyle();
@@ -244,13 +256,18 @@ export default {
         this.rsMap = "天地图";
       }
     },
+    //打开日志文件
+    async checkLogBtn() {
+      let url = CONFIG.SERVER + "/v1/tools/log";
+      window.open(url, "_blank");
+    },
     //开始训练
     async train(feature) {
       let extent = this.getExtentStr(feature);
       this.msg = extent;
       await axios({
         method: "get",
-        url: CONFIG.HOST + "/v1/train",
+        url: CONFIG.SERVER + "/v1/train",
         params: {
           extent: extent,
           map: "tdt"
@@ -265,8 +282,7 @@ export default {
       this.msg = "正在预测中，请稍后...";
       let response = await axios({
         method: "get",
-        url: CONFIG.HOST + "/v1/predict",
-        // url: "http://localhost:8080/test.json",
+        url: CONFIG.SERVER + "/v1/predict",
         params: {
           extent: extent,
           map: "tdt"
@@ -391,6 +407,18 @@ export default {
 .tdtIcon button {
   background-position: left;
   width: 75px;
+  text-align: right;
+  padding: 4px;
+}
+
+.logIcon {
+  position: absolute;
+  top: 20px;
+  right: 100px;
+}
+.logIcon button {
+  background-position: left;
+  width: 50px;
   text-align: right;
   padding: 4px;
 }
