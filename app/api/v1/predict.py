@@ -1,6 +1,8 @@
+import time
 from app.libs.redprint import Redprint
 from flask import jsonify, request
-from robosat_geoc import RSPpredict
+from app.config import setting as SETTING
+from robosat_pink.geoc import RSPpredict
 
 api = Redprint('predict')
 
@@ -22,9 +24,13 @@ def predict():
         result["code"] = 0
         result["msg"] = "参数有误"
         return jsonify(result)
-    # 获取geojson数据
 
-    geojson = RSPpredict.main(extent)
+    # 使用robosat_geoc开始预测
+    dataPath = SETTING.ROBOSAT_DATA_PATH
+    datasetPath = SETTING.ROBOSAT_DATASET_PATH
+    ts = time.time()
+    dsPredictPath = datasetPath+"/predict_"+str(ts)
+    geojson = RSPpredict.main(extent, dataPath, dsPredictPath, map="tdt")
 
     if not geojson:
         result["code"] = 0

@@ -1,7 +1,8 @@
+import time
 from app.libs.redprint import Redprint
 from flask import jsonify, request
-from robosat_geoc import RSPtrain
-
+from robosat_pink.geoc import RSPtrain
+from app.config import setting as SETTING
 api = Redprint('train')
 
 
@@ -22,7 +23,11 @@ def train():
         result["code"] = 0
         result["msg"] = "参数有误"
         return jsonify(result)
-    # 获取geojson数据
 
-    RSPtrain.main(extent)
+    # 通过robosat_pink训练
+    dataPath = SETTING.ROBOSAT_DATA_PATH
+    datasetPath = SETTING.ROBOSAT_DATASET_PATH
+    ts = time.time()
+    dsTrainPath = datasetPath+"/train_"+str(ts)
+    RSPtrain.main(extent, dataPath, dsTrainPath, map="tdt")
     return extent

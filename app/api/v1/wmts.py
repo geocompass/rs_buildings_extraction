@@ -1,7 +1,7 @@
 import requests
 from flask import request, Response
 from app.libs.redprint import Redprint
-
+from app.config import setting as SETTING
 api = Redprint('wmts')
 
 
@@ -12,10 +12,11 @@ def wmts(x, y, z):
         return None
     if map and (map != "tdt" or map != "google"):
         return "地图类型设置错误"
-    url = '''https://t4.tianditu.gov.cn/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=2ce94f67e58faa24beb7cb8a09780552'''
-    url_google = '''http://ditu.google.cn/maps/vt/lyrs=s&x={x}&y={y}&z={z}'''
+    url = SETTING.URL_TDT
+    url_google = SETTING.URL_GOOGLE
     if map == 'google':
         url = url_google
+    print(url.format(x=x, y=y, z=z))
     image = requests.get(url.format(x=x, y=y, z=z))
 
     return Response(image, mimetype='image/jpeg')
