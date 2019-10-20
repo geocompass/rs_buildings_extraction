@@ -27,7 +27,8 @@ def train():
     # 通过robosat_pink训练
     dataPath = SETTING.ROBOSAT_DATA_PATH
     datasetPath = SETTING.ROBOSAT_DATASET_PATH
+    pthPath = dataPath + "/model/checkpoint-00010.pth"
     ts = time.time()
     dsTrainPath = datasetPath+"/train_"+str(ts)
-    RSPtrain.main(extent, dataPath, dsTrainPath, map="tdt")
+    RSPtrain.main(extent, dataPath, dsTrainPath, pthPath, map="tdt")
     return extent

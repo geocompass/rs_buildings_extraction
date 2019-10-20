@@ -28,9 +28,11 @@ def predict():
     # 使用robosat_geoc开始预测
     dataPath = SETTING.ROBOSAT_DATA_PATH
     datasetPath = SETTING.ROBOSAT_DATASET_PATH
+    pthPath = dataPath + "/model/checkpoint-00010.pth"
     ts = time.time()
     dsPredictPath = datasetPath+"/predict_"+str(ts)
-    geojson = RSPpredict.main(extent, dataPath, dsPredictPath, map="tdt")
+    geojson = RSPpredict.main(
+        extent, dataPath, dsPredictPath, pthPath, map="tdt")
 
     if not geojson:
         result["code"] = 0
