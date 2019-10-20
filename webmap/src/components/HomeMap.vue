@@ -265,39 +265,76 @@ export default {
     async train(feature) {
       let extent = this.getExtentStr(feature);
       this.msg = extent;
-      await axios({
-        method: "get",
-        url: CONFIG.SERVER + "/v1/train",
-        params: {
-          extent: extent,
-          map: "tdt"
+      let spendSeconds = 0;
+      let trainInterval = setInterval(() => {
+        spendSeconds += 0.1;
+        this.msg = `training...,it spends ${spendSeconds.toFixed(2)} seconds`;
+      }, 100);
+      let response = await axios
+        .get(CONFIG.SERVER + "/v1/train", {
+          params: {
+            extent: extent,
+            map: "tdt"
+          }
+        })
+        .catch(error => {
+          clearInterval(trainInterval);
+          this.msg =
+            "training faild, please check log in backend！" +
+            JSON.stringify(error);
+        });
+      if (trainInterval) {
+        clearInterval(trainInterval);
+      }
+      if (response && response.data) {
+        let result = response.data;
+        if (result.status === 1) {
+          this.msg = `training finished，it spends ${spendSeconds.toFixed(
+            2
+          )} seconds！`;
+        } else {
+          this.msg = result.msg;
         }
-      });
-      this.msg = "正在训练中，请再系统后台查看进度...";
+      }
     },
     //开始预测
     async predict(feature) {
       let extent = this.getExtentStr(feature);
       this.msg = extent;
-      this.msg = "正在预测中，请稍后...";
-      let response = await axios({
-        method: "get",
-        url: CONFIG.SERVER + "/v1/predict",
-        params: {
-          extent: extent,
-          map: "tdt"
+      let spendSeconds = 0;
+      let predictInterval = setInterval(() => {
+        spendSeconds += 0.1;
+        this.msg = `predicting，it spends${spendSeconds.toFixed(2)} seconds！`;
+      }, 100);
+      let response = await axios
+        .get(CONFIG.SERVER + "/v1/predict", {
+          params: {
+            extent: extent,
+            map: "tdt"
+          }
+        })
+        .catch(error => {
+          clearInterval(predictInterval);
+          this.msg =
+            "predicting faild, please check log in backend！" +
+            JSON.stringify(error);
+        });
+      debugger;
+      if (predictInterval) {
+        clearInterval(predictInterval);
+      }
+      if (response && response.data) {
+        let result = response.data;
+        if (result.code === 0) {
+          this.msg = result.msg;
+          return;
+        } else {
+          this.msg = `predicting finished，it spends${spendSeconds.toFixed(
+            2
+          )} seconds！`;
+          this.draw.add(result.data);
         }
-      });
-      if (response.status != 200 || !response.data) {
-        this.msg = "预测失败！，status code:" + response.status;
-        return;
       }
-      let result = response.data;
-      if (result.code === 0) {
-        this.msg = result.msg;
-        return;
-      }
-      this.draw.add(result.data);
     },
     //将矩形的geojson提取extent为string类型
     getExtentStr(geojson) {
