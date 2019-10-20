@@ -51,6 +51,15 @@
       >
         日志
       </button>
+    </div>
+    <div class="mapboxgl-ctrl-group mapboxgl-ctrl logClearIcon">
+      <button
+        class="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_trash"
+        title="清空"
+        v-on:click="clearLogBtn"
+      >
+        清空
+      </button>
       <!-- </a> -->
     </div>
   </div>
@@ -261,6 +270,15 @@ export default {
       let url = CONFIG.SERVER + "/v1/tools/log";
       window.open(url, "_blank");
     },
+    async clearLogBtn() {
+      let url = CONFIG.SERVER + "/v1/tools/log/clear";
+      let response = await axios.get(url).catch(() => {
+        this.msg = "clear log faild!";
+      });
+      if (response && response.data) {
+        this.msg = "clear log success";
+      }
+    },
     //开始训练
     async train(feature) {
       let extent = this.getExtentStr(feature);
@@ -442,7 +460,7 @@ export default {
 }
 .tdtIcon button {
   background-position: left;
-  width: 75px;
+  width: 60px;
   text-align: right;
   padding: 4px;
 }
@@ -450,9 +468,20 @@ export default {
 .logIcon {
   position: absolute;
   top: 20px;
-  right: 100px;
+  right: 130px;
 }
 .logIcon button {
+  background-position: left;
+  width: 50px;
+  text-align: right;
+  padding: 4px;
+}
+.logClearIcon {
+  position: absolute;
+  top: 20px;
+  right: 75px;
+}
+.logClearIcon button {
   background-position: left;
   width: 50px;
   text-align: right;
