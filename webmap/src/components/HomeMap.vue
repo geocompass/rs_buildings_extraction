@@ -288,7 +288,7 @@ export default {
       }
       if (response && response.data) {
         let result = response.data;
-        if (result.status === 1) {
+        if (result.code === 1) {
           this.msg = `training finished，it spends ${spendSeconds.toFixed(
             2
           )} seconds！`;
@@ -319,7 +319,6 @@ export default {
             "predicting faild, please check log in backend！" +
             JSON.stringify(error);
         });
-      debugger;
       if (predictInterval) {
         clearInterval(predictInterval);
       }
