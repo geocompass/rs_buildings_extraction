@@ -36,7 +36,25 @@
   - 前台运行：`python main.py` 
   - 后台运行：`python main.py &`
 
+## 如何开发
 
+### 技术栈
+
+- 前端：Vue.js+MapboxGL.js
+- 后台：Python+Flask
+- 数据库：PostgreSQL+PostGIS
+- 遥感影像提取：[Robosat_geoc](https://github.com/geocompass/robosat_geoc/) 
+
+### 文件目录
+
+- `app`：Flask 服务
+  - `api` ：对Flask外提供的接口
+  - `config`：各类项目运行配置文件
+- `webmap`：前端地图页面开发库
+  - `dist`：对外发布的前端页面
+    - `config.js`：前端连接后台配置文件
+  - `public`：vue.js开发时所需的静态配置文件
+  - `src`：vue.js 开发文件
 
 ## 项目依赖
 
